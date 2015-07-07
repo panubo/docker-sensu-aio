@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ ! -e "/etc/sensu/conf.d/client.json" ]; then
+	echo "No client.json found. Not starting sensu-client"
+	s6-svc -xd $(pwd)
+	exit
+fi
+
+#export PATH="/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/etc/sensu/plugins:/etc/sensu/handlers"
+#export GEM_PATH="/opt/sensu/embedded/lib/ruby/gems/2.0.0"
+export PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LANG="en_AU.utf8"
+export EMBEDDED_RUBY=true
+export HOME=/opt/sensu
+
+exec s6-setuidgid sensu /opt/sensu/bin/sensu-client -c /etc/sensu/config.json -d /etc/sensu -e /etc/sensu/extensions -L $LOGLEVEL

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export HOME="/var/lib/rabbitmq"
+export RABBITMQ_LOGS=-
+export RABBITMQ_SASL_LOGS=-
+
+cd /tmp
+exec s6-setuidgid rabbitmq /usr/sbin/rabbitmq-server
