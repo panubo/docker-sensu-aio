@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export PATH="/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/etc/sensu/plugins:/etc/sensu/handlers"
+export PATH="/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export GEM_PATH="/opt/sensu/embedded/lib/ruby/gems/2.0.0"
 export LANG="en_AU.utf8"
 
