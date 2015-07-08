@@ -39,6 +39,9 @@ RUN /opt/sensu/embedded/bin/gem install \
   sensu-plugins-ponymailer \
   --no-rdoc --no-ri
 
+# Work around for a couple of sensu-plugins-ponymailer issues
+ADD handler-ponymailer.rb /opt/sensu/embedded/lib/ruby/gems/2.0.0/gems/sensu-plugins-ponymailer-0.0.1/bin/handler-ponymailer.rb
+
 ENV PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TMPDIR=/var/tmp
 ENV LOGLEVEL=warn
 
