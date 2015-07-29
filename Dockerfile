@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Some dependencies
 RUN apt-get update && \
   apt-get -y install curl sudo bc inotify-tools && \
-  curl -L https://github.com/just-containers/skaware/releases/download/v1.13.0/s6-2.1.6.0-linux-amd64-bin.tar.gz | tar -C / -zxf -
+  curl -L https://github.com/just-containers/skaware/releases/download/v1.14.0/s6-2.2.0.0-linux-amd64-bin.tar.gz | tar -C / -zxf -
 
 CMD ["/usr/bin/s6-svscan","/etc/s6"]
 
@@ -38,9 +38,6 @@ RUN /opt/sensu/embedded/bin/gem install \
   sensu-plugins-process-checks \
   sensu-plugins-ponymailer \
   --no-rdoc --no-ri
-
-# Work around for a couple of sensu-plugins-ponymailer issues
-ADD handler-ponymailer.rb /opt/sensu/embedded/lib/ruby/gems/2.0.0/gems/sensu-plugins-ponymailer-0.0.1/bin/handler-ponymailer.rb
 
 ENV PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TMPDIR=/var/tmp
 ENV LOGLEVEL=warn
