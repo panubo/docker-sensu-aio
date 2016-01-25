@@ -4,6 +4,9 @@ MAINTAINER Tim Robinson <tim@panubo.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
+ENV SENSU_VERSION 0.21.0
+ENV SENSU_PKG_VERSION 2
+
 # Some dependencies
 RUN apt-get update && \
   apt-get -y install curl sudo bc inotify-tools && \
@@ -11,13 +14,11 @@ RUN apt-get update && \
 
 CMD ["/usr/bin/s6-svscan","/etc/s6"]
 
-# Setup sensu package repo
-RUN curl http://repos.sensuapp.org/apt/pubkey.gpg | apt-key add - && \
-  echo "deb     http://repos.sensuapp.org/apt sensu main" | tee /etc/apt/sources.list.d/sensu.list
-
-# Install sensu
-RUN apt-get update && \
-  apt-get install sensu uchiwa && \
+# Setup sensu package repo & Install Sensu
+RUN curl http://repositories.sensuapp.org/apt/pubkey.gpg | apt-key add - && \
+  echo "deb     http://repositories.sensuapp.org/apt sensu main" | tee /etc/apt/sources.list.d/sensu.list && \
+  apt-get update && \
+  apt-get install sensu=${SENSU_VERSION}-${SENSU_PKG_VERSION} uchiwa && \
   echo "EMBEDDED_RUBY=true" > /etc/default/sensu
 
 # Install RabbitMQ
