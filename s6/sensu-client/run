@@ -2,7 +2,7 @@
 
 if [ ! -e "/etc/sensu/conf.d/client.json" ]; then
 	echo "No client.json found. Not starting sensu-client"
-	s6-svc -xd $(pwd)
+	s6-svc -d $(pwd)
 	exit
 fi
 
