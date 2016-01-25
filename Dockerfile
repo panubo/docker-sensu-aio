@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Some dependencies
 RUN apt-get update && \
   apt-get -y install curl sudo bc inotify-tools && \
-  curl -L https://github.com/just-containers/skaware/releases/download/v1.14.0/s6-2.2.0.0-linux-amd64-bin.tar.gz | tar -C / -zxf -
+  curl -L https://github.com/just-containers/skaware/releases/download/v1.16.1/s6-2.2.2.0-linux-amd64-bin.tar.gz | tar -C / -zxf -
 
 CMD ["/usr/bin/s6-svscan","/etc/s6"]
 
