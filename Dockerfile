@@ -61,6 +61,7 @@ EXPOSE 3000
 ADD s6 /etc/s6/
 ADD config.json /etc/sensu/config.json
 ADD client.json /etc/sensu/conf.d/client.json
+ADD handler-default.json /etc/sensu/conf.d/handler-default.json
 ADD check-sensu.json /etc/sensu/conf.d/check-sensu.json
 ADD uchiwa.json /etc/sensu/uchiwa.json
 ADD rabbitmq.config /etc/rabbitmq/rabbitmq.config

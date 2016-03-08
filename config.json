@@ -13,11 +13,5 @@
   "api": {
     "host": "localhost",
     "port": 4567
-  },
-  "handlers": {
-    "default": {
-      "type": "pipe",
-      "command": "true"
-    }
   }
 }
