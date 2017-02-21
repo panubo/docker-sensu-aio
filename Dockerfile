@@ -38,6 +38,7 @@ RUN /opt/sensu/embedded/bin/gem install \
   pony \
   sensu-plugins-process-checks \
   sensu-plugins-ponymailer \
+  sensu-plugins-pagerduty \
   --no-rdoc --no-ri
 
 # Workaround handler-ponymailer.rb bug
