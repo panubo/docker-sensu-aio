@@ -1,10 +1,5 @@
 #!/bin/sh
 
-if [ -e "/etc/sensu/conf.d/uchiwa.json" ]; then
-	UCHIWA_CONF=/etc/sensu/conf.d/uchiwa.json
-else
-	UCHIWA_CONF=/etc/sensu/uchiwa.json
-fi
+UCHIWA_CONF=/etc/uchiwa/uchiwa.json
 
-#cd /opt/uchiwa/src/uchiwa
-exec s6-setuidgid uchiwa /opt/uchiwa/bin/uchiwa -c $UCHIWA_CONF -p /opt/uchiwa/src/public
+s6-setuidgid uchiwa /opt/uchiwa/bin/uchiwa -c $UCHIWA_CONF -p /opt/uchiwa/src/public | sed "s/^/[UCHIWA] /"

@@ -13,4 +13,4 @@ export LANG="en_AU.utf8"
 export EMBEDDED_RUBY=true
 export HOME=/opt/sensu
 
-exec s6-setuidgid sensu /opt/sensu/bin/sensu-client -c /etc/sensu/config.json -d /etc/sensu -e /etc/sensu/extensions -L $LOGLEVEL
+s6-setuidgid sensu /opt/sensu/bin/sensu-client -c /etc/sensu/config.json -d /etc/sensu -e /etc/sensu/extensions -L $LOGLEVEL | sed "s/^/[SENSU-CLIENT] /"

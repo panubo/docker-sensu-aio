@@ -15,6 +15,7 @@
     "user": "",
     "pass": "",
     "port": 3000,
-    "interval": 5
+    "interval": 5,
+    "loglevel": "warn"
   }
 }
