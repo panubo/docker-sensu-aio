@@ -75,3 +75,5 @@ ADD s6 /etc/s6/
 ADD config.json /etc/sensu/config.json
 ADD conf.d/ /etc/sensu/conf.d/
 ADD uchiwa.json /etc/uchiwa/uchiwa.json
+
+ENV BUILD_VERSION v0.26.5-2
