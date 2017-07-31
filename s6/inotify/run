@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec inotifywait /etc/sensu/conf.d/ -e modify --exclude '\.(swp|swx|md|json~)'
