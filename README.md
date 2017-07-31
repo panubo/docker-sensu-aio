@@ -13,10 +13,13 @@ This image is a quick way to get started with Sensu. It includes the following
 
 ```
 # Start the sensu server
-docker run -d -v `pwd`/conf.d/:/etc/sensu/conf.d/ --name sensu -p 3000:3000 trnubo/sensu-aio
+docker run -d -v `pwd`/conf.d/:/etc/sensu/conf.d/ --name sensu -p 3000:3000 panubo/sensu-aio
 
 # Start an monitoring container
-docker run -d --hostname $HOSTNAME -v /:/host/:ro --link sensu:sensu trnubo/monitor
+# Simple tests
+docker run -d --hostname $HOSTNAME -v /:/host/:ro --link sensu:sensu panubo/monitor
+# More tests
+docker run -d --hostname $HOSTNAME -v /:/host/:ro -v /dev:/host/dev --privileged --security-opt label:disable --link sensu:sensu --name monitor -e SENSU_CLIENT_SUBSCRIPTIONS=node panubo/monitor
 
 # Open browser to http://127.0.0.1:3000/
 ```
