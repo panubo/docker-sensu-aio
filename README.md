@@ -42,3 +42,8 @@ One method to manage this is to mount /etc/sensu/conf.d to the host and edit fro
 ### Local client
 
 This images comes configured with sensu-client but really provides no value and should probably not be used. As such if /etc/sensu/conf.d/client.json is missing the local client will not be started. Use another client like panubo/monitor to actually start using sensu properly.
+
+### Versions
+
+The image tag is related to the sensu version package in the image. The version major, minor and patch will match the sensu version exactly however the revision will not necessarily match the sensu package revision. The revision is incremented with the docker image instead of the debian package revision.
+
