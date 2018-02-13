@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 if [ ! -e "/etc/sensu/conf.d/client.json" ]; then
 	echo "No client.json found. Not starting sensu-client"
@@ -13,4 +13,4 @@ export LANG="en_AU.utf8"
 export EMBEDDED_RUBY=true
 export HOME=/opt/sensu
 
-s6-setuidgid sensu /opt/sensu/bin/sensu-client -c /etc/sensu/config.json -d /etc/sensu -e /etc/sensu/extensions -L $LOGLEVEL | sed "s/^/[SENSU-CLIENT] /"
+exec s6-setuidgid sensu /opt/sensu/bin/sensu-client -c /etc/sensu/config.json -d /etc/sensu -e /etc/sensu/extensions -L $LOGLEVEL

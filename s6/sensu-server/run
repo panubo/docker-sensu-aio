@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 export PATH="/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export GEM_PATH="/opt/sensu/embedded/lib/ruby/gems/2.0.0"
 export LANG="en_AU.utf8"
 
-s6-setuidgid sensu /opt/sensu/bin/sensu-server -c /etc/sensu/config.json -d /etc/sensu -e /etc/sensu/extensions -L $LOGLEVEL | sed "s/^/[SENSU-SERVER] /"
+exec s6-setuidgid sensu /opt/sensu/bin/sensu-server -c /etc/sensu/config.json -d /etc/sensu -e /etc/sensu/extensions -L $LOGLEVEL

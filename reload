@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+s6-svc -a /etc/s6/sensu-server

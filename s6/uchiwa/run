@@ -1,5 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 UCHIWA_CONF=/etc/uchiwa/uchiwa.json
 
-s6-setuidgid uchiwa /opt/uchiwa/bin/uchiwa -c $UCHIWA_CONF -p /opt/uchiwa/src/public | sed "s/^/[UCHIWA] /"
+exec s6-setuidgid uchiwa /opt/uchiwa/bin/uchiwa -c $UCHIWA_CONF -p /opt/uchiwa/src/public

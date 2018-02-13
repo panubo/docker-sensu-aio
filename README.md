@@ -13,10 +13,10 @@ This image is a quick way to get started with Sensu. It includes the following
 
 ```
 # Start the sensu server
-docker run -d -v `pwd`/conf.d/:/etc/sensu/conf.d/ --name sensu -p 3000:3000 trnubo/sensu-aio
+docker run -d -v `pwd`/conf.d/:/etc/sensu/conf.d/ --name sensu -p 3000:3000 panubo/sensu-aio
 
 # Start an monitoring container
-docker run -d --hostname $HOSTNAME -v /:/host/:ro --link sensu:sensu trnubo/monitor
+docker run -d --hostname $HOSTNAME -v /:/host/:ro --link sensu:sensu panubo/monitor
 
 # Open browser to http://127.0.0.1:3000/
 ```
@@ -41,4 +41,4 @@ One method to manage this is to mount /etc/sensu/conf.d to the host and edit fro
 
 ### Local client
 
-This images comes configured with sensu-client but really provides no value and should probably not be used. As such if /etc/sensu/conf.d/client.json is missing the local client will not be started. Use another client like trnubo/monitor to actually start using sensu properly.
+This images comes configured with sensu-client but really provides no value and should probably not be used. As such if /etc/sensu/conf.d/client.json is missing the local client will not be started. Use another client like panubo/monitor to actually start using sensu properly.
