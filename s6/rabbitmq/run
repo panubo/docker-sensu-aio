@@ -4,5 +4,10 @@ export HOME="/var/lib/rabbitmq"
 export RABBITMQ_LOGS=-
 export RABBITMQ_SASL_LOGS=-
 
+for item in /etc/rabbitmq/rabbitmq.config.tmpl; do
+  gomplate < ${item} > ${item/%\.tmpl/}
+  [[ "${DEBUG:-false}" == 'true' ]] && cat ${item/%\.tmpl/}
+done
+
 cd /tmp
 exec s6-setuidgid rabbitmq /usr/sbin/rabbitmq-server

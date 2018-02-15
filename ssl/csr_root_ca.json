@@ -1,0 +1,10 @@
+{
+ "CN": "sensu",
+ "key": {
+    "algo": "rsa",
+    "size": 2048
+ },
+ "ca": {
+    "expiry": "262800h"
+ }
+}

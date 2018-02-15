@@ -1,0 +1,7 @@
+{
+  "CN": "sensu",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  }
+}

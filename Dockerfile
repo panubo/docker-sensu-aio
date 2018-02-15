@@ -1,17 +1,34 @@
 FROM debian:stretch
 
-MAINTAINER Tim Robinson <tim@panubo.com>
-
 ENV DEBIAN_FRONTEND noninteractive
 
 # Some dependencies
 RUN apt-get update && \
   apt-get -y install curl sudo bc inotify-tools gnupg2 && \
-  curl -L https://github.com/just-containers/skaware/releases/download/v1.21.2/s6-2.6.1.1-linux-amd64-bin.tar.gz | tar -C /usr -zxf - && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
+# Install s6
+RUN set -x \
+  && S6_VERSION=2.6.1.1 \
+  && EXECLINE_VERSION=2.3.0.3 \
+  && SKAWARE_RELEASE=1.21.2 \
+  && curl -sS -L https://github.com/just-containers/skaware/releases/download/v${SKAWARE_RELEASE}/s6-${S6_VERSION}-linux-amd64-bin.tar.gz | tar -C /usr -zxf - \
+  && curl -sS -L https://github.com/just-containers/skaware/releases/download/v${SKAWARE_RELEASE}/execline-${EXECLINE_VERSION}-linux-amd64-bin.tar.gz | tar -C /usr -zxf - \
+  ;
 CMD ["/usr/bin/s6-svscan","/etc/s6"]
+
+# Install gomplate
+RUN set -x \
+  && GOMPLATE_VERSION=v2.2.0 \
+  && GOMPLATE_CHECKSUM=0e09e7cd6fb5e96858255a27080570624f72910e66be5152b77a2fd21d438dd7 \
+  && curl -sS -o /tmp/gomplate_linux-amd64-slim -L https://github.com/hairyhenderson/gomplate/releases/download/${GOMPLATE_VERSION}/gomplate_linux-amd64-slim \
+  && echo "${GOMPLATE_CHECKSUM}  gomplate_linux-amd64-slim" > /tmp/SHA256SUM \
+  && ( cd /tmp; sha256sum -c SHA256SUM; ) \
+  && mv /tmp/gomplate_linux-amd64-slim /usr/local/bin/gomplate \
+  && chmod +x /usr/local/bin/gomplate \
+  && rm -f /tmp/* \
+  ;
 
 ENV SENSU_VERSION 1.2.1
 ENV SENSU_PKG_VERSION 2
@@ -55,10 +72,11 @@ RUN /opt/sensu/embedded/bin/gem install \
 
 ENV PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TMPDIR=/var/tmp
 ENV LOGLEVEL=warn
+ENV SENSU_CACERT=/etc/sensu/ssl/root_ca.pem SENSU_SERVER_CERT=/etc/sensu/ssl/server.pem SENSU_SERVER_KEY=/etc/sensu/ssl/server-key.pem SENSU_CLIENT_CERT=/etc/sensu/ssl/sensu.pem SENSU_CLIENT_KEY=/etc/sensu/ssl/sensu-key.pem
 
 # Expose some ports
-# Rabbitmq
-EXPOSE 5672
+# Rabbitmq ssl 5671/tcp non-ssl 5672/tcp
+EXPOSE 5671 5672
 # Redis
 #EXPOSE 6379
 # Sensu API
@@ -70,11 +88,11 @@ RUN mkdir /etc/uchiwa && \
   mv /etc/sensu/uchiwa.json /etc/uchiwa/uchiwa.json
 
 # Add config
-ADD rabbitmq.config /etc/rabbitmq/rabbitmq.config
+ADD rabbitmq.config.tmpl /etc/rabbitmq/rabbitmq.config.tmpl
 ADD s6 /etc/s6/
-ADD config.json /etc/sensu/config.json
+ADD config.json.tmpl /etc/sensu/config.json.tmpl
 ADD conf.d/ /etc/sensu/conf.d/
 ADD uchiwa.json /etc/uchiwa/uchiwa.json
 ADD reload /reload
 
-ENV BUILD_VERSION 1.2.1-1
+ENV BUILD_VERSION 1.2.1-2

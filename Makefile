@@ -31,5 +31,7 @@ docker-release: ## Builds and pushes docker image
 	git checkout tags/$(VERSION)
 	docker build -t $(NAME):$(VERSION) .
 	docker tag $(NAME):$(VERSION) docker.io/$(NAME):$(VERSION)
+	docker tag $(NAME):$(VERSION) docker.io/$(NAME):$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
 	docker push docker.io/$(NAME):$(VERSION)
+	docker push docker.io/$(NAME):$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
 	git checkout $(BRANCH)

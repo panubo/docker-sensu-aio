@@ -4,4 +4,13 @@ export PATH="/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/u
 export GEM_PATH="/opt/sensu/embedded/lib/ruby/gems/2.0.0"
 export LANG="en_AU.utf8"
 
-exec s6-setuidgid sensu /opt/sensu/bin/sensu-server -c /etc/sensu/config.json -d /etc/sensu -e /etc/sensu/extensions -L $LOGLEVEL
+for item in /etc/sensu/config.json.tmpl; do
+  gomplate < ${item} > ${item/%\.tmpl/}
+  [[ "${DEBUG:-false}" == 'true' ]] && cat ${item/%\.tmpl/}
+done
+
+# Because sensu-client and sensu-api rely on /etc/sensu/config.json to start
+# s3-notifyoncheck is used to block their start until the config.json is
+# written by this script.
+
+exec s6-notifyoncheck -d -c /bin/true /usr/bin/s6-setuidgid sensu /opt/sensu/bin/sensu-server -c /etc/sensu/config.json -d /etc/sensu -e /etc/sensu/extensions -L $LOGLEVEL

@@ -1,6 +1,14 @@
 {
   "rabbitmq": {
+{{- if (has .Env "SENSU_SSL") }}
+    "ssl": {
+      "cert_chain_file": "{{ .Env.SENSU_CLIENT_CERT }}",
+      "private_key_file": "{{ .Env.SENSU_CLIENT_KEY }}"
+    },
+    "port": 5671,
+{{- else }}
     "port": 5672,
+{{- end }}
     "host": "127.0.0.1",
     "user": "guest",
     "password": "guest",
