@@ -10,9 +10,9 @@
     "port": 5672,
 {{- end }}
     "host": "127.0.0.1",
-    "user": "guest",
-    "password": "guest",
-    "vhost": "/"
+    "user": "{{ .Env.SENSU_RABBITMQ_SERVER_USER }}",
+    "password": "{{ .Env.SENSU_RABBITMQ_SERVER_PASS }}",
+    "vhost": "{{ .Env.SENSU_RABBITMQ_VHOST }}"
   },
   "redis": {
     "host": "127.0.0.1",

@@ -73,6 +73,7 @@ RUN /opt/sensu/embedded/bin/gem install \
 ENV PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TMPDIR=/var/tmp
 ENV LOGLEVEL=warn
 ENV SENSU_CACERT=/etc/sensu/ssl/root_ca.pem SENSU_SERVER_CERT=/etc/sensu/ssl/server.pem SENSU_SERVER_KEY=/etc/sensu/ssl/server-key.pem SENSU_CLIENT_CERT=/etc/sensu/ssl/sensu.pem SENSU_CLIENT_KEY=/etc/sensu/ssl/sensu-key.pem
+ENV SENSU_RABBITMQ_SERVER_USER=guest SENSU_RABBITMQ_SERVER_PASS=guest SENSU_RABBITMQ_VHOST=/ 
 
 # Expose some ports
 # Rabbitmq ssl 5671/tcp non-ssl 5672/tcp
@@ -88,11 +89,12 @@ RUN mkdir /etc/uchiwa && \
   mv /etc/sensu/uchiwa.json /etc/uchiwa/uchiwa.json
 
 # Add config
-ADD rabbitmq.config.tmpl /etc/rabbitmq/rabbitmq.config.tmpl
-ADD s6 /etc/s6/
-ADD config.json.tmpl /etc/sensu/config.json.tmpl
-ADD conf.d/ /etc/sensu/conf.d/
-ADD uchiwa.json /etc/uchiwa/uchiwa.json
-ADD reload /reload
+COPY rabbitmq.config.tmpl /etc/rabbitmq/rabbitmq.config.tmpl
+COPY s6 /etc/s6/
+COPY config.json.tmpl /etc/sensu/config.json.tmpl
+COPY conf.d/ /etc/sensu/conf.d/
+COPY uchiwa.json /etc/uchiwa/uchiwa.json
+COPY reload /reload
+COPY security.sh /security.sh
 
 ENV BUILD_VERSION 1.2.1-2

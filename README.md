@@ -54,8 +54,25 @@ docker run -d -v $(pwd)/conf.d/:/etc/sensu/conf.d/ -v $(pwd)/ssl:/etc/sensu/ssl 
 * `SENSU_SSL` required, enable SSL support. (Leave unset to disable)
 * `SENSU_CACERT` optional, path to CA Certificate. `/etc/sensu/ssl/root_ca.pem`
 * `SENSU_SERVER_CERT` optional, path to rabbitmq server certificate. `/etc/sensu/ssl/server.pem`
+* `SENSU_SERVER_KEY` options, path to rabbitmq server private key. `/etc/sensu/ssl/server-key.pem`
 * `SENSU_CLIENT_CERT` optional, path to sensu server certificate. `/etc/sensu/ssl/sensu.pem`
-* ``
+* `SENSU_CLIENT_KEY` options, path to sensu server private key. `/etc/sensu/sssl/sensu-key.pem`
+
+## Rabbitmq security
+
+By default rabbitmq and sensu are configured to use the default guest rabbitmq user and the default `/` vhost. The following variable will configure sensu to use an alternate set of rabbitmq credentials and vhost.
+
+* `SENSU_RABBITMQ_SECURITY` restricts the guest user to loopback, leave unset to disable.
+* `SENSU_RABBITMQ_SERVER_USER`
+* `SENSU_RABBITMQ_SERVER_PASS`
+* `SENSU_RABBITMQ_VHOST`
+
+Rabbitmq is not automatically configured to use these variables however a script has been provided to configure them. Once the container has started and rabbitmq is running (should only be a few seconds later) run `docker exec sensu /security.sh` to configure rabbitmq.
+
+Additionally the following environment variables can be set and are used by the `security.sh` script to setup a sensu client user.
+
+* `SENSU_RABBITMQ_CLIENT_USER`
+* `SENSU_RABBITMQ_CLIENT_PASS`
 
 ### Local client
 

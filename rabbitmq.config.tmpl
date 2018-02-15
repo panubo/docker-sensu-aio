@@ -11,6 +11,10 @@
                     {fail_if_no_peer_cert,true}]},
     {tcp_listeners, [{"127.0.0.1",5672}]},
 {{- end }}
+{{- if (has .Env "SENSU_RABBITMQ_SECURITY") }}
+    {loopback_users, ["guest"]}
+{{- else }}
     {loopback_users, []}
+{{- end }}
   ]}
 ].
