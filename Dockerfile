@@ -35,40 +35,52 @@ ENV SENSU_PKG_VERSION 2
 ENV UCHIWA_VERSION 1.1.3
 ENV UCHIWA_PKG_VERSION 1
 
-# Setup sensu package repo & Install Sensu
-RUN curl http://repositories.sensuapp.org/apt/pubkey.gpg | apt-key add - && \
-  echo "deb     http://repositories.sensuapp.org/apt stretch main" | tee /etc/apt/sources.list.d/sensu.list && \
-  apt-get update && \
-  apt-get install sensu=${SENSU_VERSION}-${SENSU_PKG_VERSION} uchiwa=${UCHIWA_VERSION}-${UCHIWA_PKG_VERSION} && \
-  echo "EMBEDDED_RUBY=true" > /etc/default/sensu && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+# Setup sensu package repo & Install Sensu, uid:gid sensu 999:999 uchiwa 998:998
+RUN set -x \
+  && curl http://repositories.sensuapp.org/apt/pubkey.gpg | apt-key add - \
+  && echo "deb     http://repositories.sensuapp.org/apt stretch main" | tee /etc/apt/sources.list.d/sensu.list \
+  && apt-get update \
+  && apt-get install sensu=${SENSU_VERSION}-${SENSU_PKG_VERSION} uchiwa=${UCHIWA_VERSION}-${UCHIWA_PKG_VERSION} \
+  && echo "EMBEDDED_RUBY=true" > /etc/default/sensu \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
+  ;
 
-# Install RabbitMQ
-RUN curl https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add - && \
-  echo "deb     http://www.rabbitmq.com/debian/ testing main" | tee /etc/apt/sources.list.d/rabbitmq.list && \
-  apt-get update && \
-  apt-get install -y rabbitmq-server && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+# Install RabbitMQ, uid:gid 106:110
+RUN set -x \
+  && groupadd -g 110 rabbitmq \
+  && useradd -u 106 -g rabbitmq -c "RabbitMQ messaging server,,," -M -d "/var/lib/rabbitmq" -s /bin/false rabbitmq \
+  && curl https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add - \
+  && echo "deb     http://www.rabbitmq.com/debian/ testing main" | tee /etc/apt/sources.list.d/rabbitmq.list \
+  && apt-get update \
+  && apt-get install -y rabbitmq-server \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
+  ;
 VOLUME /var/lib/rabbitmq
 
-# Install Redis
-RUN apt-get update && \
-  apt-get install -y redis-server && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+# Install Redis, uid:gid 107:111
+RUN set -x \
+  && groupadd -g 111 redis \
+  && useradd -u 107 -g redis -M -d "/var/lib/redis" -s /bin/false redis \
+  && apt-get update \
+  && apt-get install -y redis-server \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
+  ;
 VOLUME /var/lib/redis
 
 # Install some gems
-RUN /opt/sensu/embedded/bin/gem install \
-  redphone \
-  mail \
-  pony \
-  sensu-plugins-process-checks \
-  sensu-plugins-ponymailer \
-  sensu-plugins-pagerduty \
-  --no-rdoc --no-ri
+RUN set -x \
+  && /opt/sensu/embedded/bin/gem install \
+    redphone \
+    mail \
+    pony \
+    sensu-plugins-process-checks \
+    sensu-plugins-ponymailer \
+    sensu-plugins-pagerduty \
+    --no-rdoc --no-ri \
+  ;
 
 ENV PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TMPDIR=/var/tmp
 ENV LOGLEVEL=warn
@@ -97,4 +109,4 @@ COPY uchiwa.json /etc/uchiwa/uchiwa.json
 COPY reload /reload
 COPY security.sh /security.sh
 
-ENV BUILD_VERSION 1.2.1-2
+ENV BUILD_VERSION 1.2.1-3
