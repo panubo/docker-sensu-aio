@@ -72,14 +72,18 @@ VOLUME /var/lib/redis
 
 # Install some gems
 RUN set -x \
+  && export DEBIAN_FRONTEND=noninteractive \
+  && apt-get update \
+  && apt-get install -y build-essential \
   && /opt/sensu/embedded/bin/gem install \
-    redphone \
-    mail \
-    pony \
     sensu-plugins-process-checks \
-    sensu-plugins-ponymailer \
+    sensu-plugins-mailer \
     sensu-plugins-pagerduty \
     --no-rdoc --no-ri \
+  && apt-get remove -y build-essential \
+  && apt-get -y autoremove \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
   ;
 
 ENV PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TMPDIR=/var/tmp
@@ -109,4 +113,4 @@ COPY uchiwa.json /etc/uchiwa/uchiwa.json
 COPY reload /reload
 COPY security.sh /security.sh
 
-ENV BUILD_VERSION 1.2.1-3
+ENV BUILD_VERSION 1.2.1-4
