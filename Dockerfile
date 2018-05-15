@@ -20,8 +20,8 @@ CMD ["/usr/bin/s6-svscan","/etc/s6"]
 
 # Install gomplate
 RUN set -x \
-  && GOMPLATE_VERSION=v2.2.0 \
-  && GOMPLATE_CHECKSUM=0e09e7cd6fb5e96858255a27080570624f72910e66be5152b77a2fd21d438dd7 \
+  && GOMPLATE_VERSION=v2.5.0 \
+  && GOMPLATE_CHECKSUM=f4cc9567c1a7b3762af175cf9d941fddef3b5032354c210604fb015c229104c7 \
   && curl -sS -o /tmp/gomplate_linux-amd64-slim -L https://github.com/hairyhenderson/gomplate/releases/download/${GOMPLATE_VERSION}/gomplate_linux-amd64-slim \
   && echo "${GOMPLATE_CHECKSUM}  gomplate_linux-amd64-slim" > /tmp/SHA256SUM \
   && ( cd /tmp; sha256sum -c SHA256SUM; ) \
@@ -30,9 +30,9 @@ RUN set -x \
   && rm -f /tmp/* \
   ;
 
-ENV SENSU_VERSION 1.2.1
-ENV SENSU_PKG_VERSION 2
-ENV UCHIWA_VERSION 1.1.3
+ENV SENSU_VERSION 1.4.2
+ENV SENSU_PKG_VERSION 1
+ENV UCHIWA_VERSION 1.2.0
 ENV UCHIWA_PKG_VERSION 1
 
 # Setup sensu package repo & Install Sensu, uid:gid sensu 999:999 uchiwa 998:998
@@ -113,4 +113,4 @@ COPY uchiwa.json /etc/uchiwa/uchiwa.json
 COPY reload /reload
 COPY security.sh /security.sh
 
-ENV BUILD_VERSION 1.2.1-4
+ENV BUILD_VERSION 1.4.2-1
