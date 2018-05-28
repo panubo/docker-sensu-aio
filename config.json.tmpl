@@ -19,6 +19,10 @@
     "port": 6379
   },
   "api": {
+{{- if (has .Env "SENSU_API_PASS") }}
+    "user": "{{ .Env.SENSU_API_USER }}",
+    "password": "{{ .Env.SENSU_API_PASS }}",
+{{- end }}
     "host": "127.0.0.1",
     "port": 4567
   }

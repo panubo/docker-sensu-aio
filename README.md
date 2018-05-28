@@ -7,7 +7,7 @@ This image is a quick way to get started with Sensu. It includes the following
 * Sensu-client (can be disabled)
 * Redis
 * RabbitMQ
-* Uchiwa
+* Uchiwa (A sensu web UI)
 
 ### Example
 
@@ -35,9 +35,18 @@ Ports for RabbitMQ, sensu-api and uchiwa are exposed.
 
 ### Config
 
-Most of sensu config belongs in /etc/sensu/conf.d
+Most of sensu config belongs in `/etc/sensu/conf.d`. The main sensu config file is `/etc/sensu/config.json` and is templated by the container bootstrap. It will always be overwritten however the main sensu config has the lowest priority so can easily be overridden by the config in `/etc/sensu/conf.d` .
 
-One method to manage this is to mount /etc/sensu/conf.d to the host and edit from there. This image includes a watcher on that directory to restart the sensu-server when changes are detected on any .json files.
+One method to manage this is to mount /etc/sensu/conf.d to the host and edit from there. This image includes a watcher on that directory to restart the sensu-server when changes are detected on any `*.json` files in that directory.
+
+The following config can also be configured via environment variables.
+
+* `SENSU_API_USER` Sensu API username
+* `SENSU_API_PASS` Sensu API password
+* `SENSU_UCHIWA_USER` Uchiwa UI username
+* `SENSU_UCHIWA_PASS` Uchiwa UI password
+
+**Note: if /etc/uchiwa/uchiwa.json already exists the template will not be applied**
 
 ## SSL
 
@@ -67,16 +76,16 @@ By default rabbitmq and sensu are configured to use the default guest rabbitmq u
 * `SENSU_RABBITMQ_SERVER_PASS`
 * `SENSU_RABBITMQ_VHOST`
 
-Rabbitmq is not automatically configured to use these variables however a script has been provided to configure them. Once the container has started and rabbitmq is running (should only be a few seconds later) run `docker exec sensu /security.sh` to configure rabbitmq.
+Rabbitmq is not automatically configured to use these variables however a script has been provided to configure them. Once the container has started and rabbitmq is running (should only be a few seconds later) run `docker exec sensu /rabbitmq-init-server` to configure rabbitmq.
 
-Additionally the following environment variables can be set and are used by the `security.sh` script to setup a sensu client user.
+There is also a script provided to add sensu client users to rabbitmq. The command `docker exec sensu /rabbitmq-add-user` will use the variables listed below to configure a sensu client user or you can pass a username and password to the script instead. For example `docker exec sensu /rabbitmq-add-user USERNAME PASSWORD`
 
 * `SENSU_RABBITMQ_CLIENT_USER`
 * `SENSU_RABBITMQ_CLIENT_PASS`
 
 ### Local client
 
-This images comes configured with sensu-client but really provides no value and should probably not be used. As such if /etc/sensu/conf.d/client.json is missing the local client will not be started. Use another client like panubo/monitor to actually start using sensu properly.
+This images comes configured with sensu-client but really provides no value and should probably not be used. As such if /etc/sensu/conf.d/client.json is missing the local client will not be started. Use another client like [panubo/monitor](https://github.com/panubo/docker-monitor) to actually start using sensu properly.
 
 ### Versions
 

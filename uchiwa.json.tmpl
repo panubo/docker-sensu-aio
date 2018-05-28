@@ -5,15 +5,15 @@
       "host": "127.0.0.1",
       "ssl": false,
       "port": 4567,
-      "user": "",
-      "pass": "",
+      "user": "{{ getenv "SENSU_API_USER" }}",
+      "pass": "{{ getenv "SENSU_API_PASS" }}",
       "path": "",
       "timeout": 5
     }
   ],
   "uchiwa": {
-    "user": "",
-    "pass": "",
+    "user": "{{ getenv "SENSU_UCHIWA_USER" }}",
+    "pass": "{{ getenv "SENSU_UCHIWA_PASS" }}",
     "port": 3000,
     "interval": 5,
     "loglevel": "warn"

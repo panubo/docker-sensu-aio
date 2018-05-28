@@ -2,4 +2,11 @@
 
 UCHIWA_CONF=/etc/uchiwa/uchiwa.json
 
+if [[ ! -e "${UCHIWA_CONF}" ]]; then
+  for item in "${UCHIWA_CONF}.tmpl"; do
+    gomplate < ${item} > ${item/%\.tmpl/}
+    [[ "${DEBUG:-false}" == 'true' ]] && cat ${item/%\.tmpl/}
+  done
+fi
+
 exec s6-setuidgid uchiwa /opt/uchiwa/bin/uchiwa -c $UCHIWA_CONF -p /opt/uchiwa/src/public

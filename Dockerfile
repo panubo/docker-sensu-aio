@@ -101,16 +101,18 @@ EXPOSE 4567
 # Uchiwa
 EXPOSE 3000
 
-RUN mkdir /etc/uchiwa && \
-  mv /etc/sensu/uchiwa.json /etc/uchiwa/uchiwa.json
+# Fix uchiwa config
+RUN set -x \
+  && mkdir /etc/uchiwa \
+  && mv /etc/sensu/uchiwa.json /etc/uchiwa/uchiwa.json \
+  ;
 
 # Add config
+COPY bin/ /
 COPY rabbitmq.config.tmpl /etc/rabbitmq/rabbitmq.config.tmpl
 COPY s6 /etc/s6/
 COPY config.json.tmpl /etc/sensu/config.json.tmpl
+COPY uchiwa.json.tmpl /etc/uchiwa/uchiwa.json.tmpl
 COPY conf.d/ /etc/sensu/conf.d/
-COPY uchiwa.json /etc/uchiwa/uchiwa.json
-COPY reload /reload
-COPY security.sh /security.sh
 
-ENV BUILD_VERSION 1.4.2-1
+ENV BUILD_VERSION 1.4.2-2
