@@ -13,4 +13,4 @@ done
 # s3-notifyoncheck is used to block their start until the config.json is
 # written by this script.
 
-exec s6-notifyoncheck -d -c /bin/true /usr/bin/s6-setuidgid sensu /opt/sensu/bin/sensu-server -c /etc/sensu/config.json -d /etc/sensu -e /etc/sensu/extensions -L $LOGLEVEL
+exec s6-notifyoncheck -d -c /bin/true /usr/bin/s6-setuidgid sensu /opt/sensu/bin/sensu-server -c /etc/sensu/config.json -d /etc/sensu/conf.d -e /etc/sensu/extensions -L $LOGLEVEL
