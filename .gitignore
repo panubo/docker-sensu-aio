@@ -1,3 +1,4 @@
 conf.d/
 ssl/*.pem
 ssl/*.csr
+env

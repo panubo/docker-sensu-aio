@@ -31,8 +31,8 @@ RUN set -x \
   ;
 
 ENV SENSU_VERSION 1.4.2
-ENV SENSU_PKG_VERSION 1
-ENV UCHIWA_VERSION 1.2.0
+ENV SENSU_PKG_VERSION 3
+ENV UCHIWA_VERSION 1.3.1
 ENV UCHIWA_PKG_VERSION 1
 
 # Setup sensu package repo & Install Sensu, uid:gid sensu 999:999 uchiwa 998:998
@@ -79,7 +79,9 @@ RUN set -x \
     sensu-plugins-process-checks \
     sensu-plugins-mailer \
     sensu-plugins-pagerduty \
+    sensu-cli \
     --no-rdoc --no-ri \
+  && mkdir -p /etc/sensu/sensu-cli \
   && apt-get remove -y build-essential \
   && apt-get -y autoremove \
   && apt-get clean \
@@ -104,15 +106,16 @@ EXPOSE 3000
 # Fix uchiwa config
 RUN set -x \
   && mkdir /etc/uchiwa \
-  && mv /etc/sensu/uchiwa.json /etc/uchiwa/uchiwa.json \
+  && rm /etc/sensu/uchiwa.json /etc/uchiwa/uchiwa.json || true \
   ;
 
 # Add config
 COPY bin/ /
 COPY rabbitmq.config.tmpl /etc/rabbitmq/rabbitmq.config.tmpl
+COPY sensu-cli-settings.rb.tmpl /etc/sensu/sensu-cli/settings.rb.tmpl
 COPY s6 /etc/s6/
 COPY config.json.tmpl /etc/sensu/config.json.tmpl
 COPY uchiwa.json.tmpl /etc/uchiwa/uchiwa.json.tmpl
 COPY conf.d/ /etc/sensu/conf.d/
 
-ENV BUILD_VERSION 1.4.2-2
+ENV BUILD_VERSION 1.4.2-3

@@ -4,7 +4,7 @@ export PATH="/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/u
 export GEM_PATH="/opt/sensu/embedded/lib/ruby/gems/2.0.0"
 export LANG="en_AU.utf8"
 
-for item in /etc/sensu/config.json.tmpl; do
+for item in /etc/sensu/config.json.tmpl /etc/sensu/sensu-cli/settings.rb.tmpl; do
   gomplate < ${item} > ${item/%\.tmpl/}
   [[ "${DEBUG:-false}" == 'true' ]] && cat ${item/%\.tmpl/}
 done
