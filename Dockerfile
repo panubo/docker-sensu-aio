@@ -10,11 +10,18 @@ RUN apt-get update && \
 
 # Install s6
 RUN set -x \
-  && S6_VERSION=2.6.1.1 \
-  && EXECLINE_VERSION=2.3.0.3 \
-  && SKAWARE_RELEASE=1.21.2 \
-  && curl -sS -L https://github.com/just-containers/skaware/releases/download/v${SKAWARE_RELEASE}/s6-${S6_VERSION}-linux-amd64-bin.tar.gz | tar -C /usr -zxf - \
-  && curl -sS -L https://github.com/just-containers/skaware/releases/download/v${SKAWARE_RELEASE}/execline-${EXECLINE_VERSION}-linux-amd64-bin.tar.gz | tar -C /usr -zxf - \
+  && S6_VERSION=2.7.1.1 \
+  && S6_CHECKSUM=42ad7f2ae6028e7321e2acef432e7b9119bab5fb8748581ca729a2f92dacf613 \
+  && EXECLINE_VERSION=2.5.0.0 \
+  && EXECLINE_CHECKSUM=f65fba9eaea5d10d082ac75452595958af1f9ca8d298055539597de2f7b713cd \
+  && SKAWARE_RELEASE=1.21.5 \
+  && curl -sSf -L https://github.com/just-containers/skaware/releases/download/v${SKAWARE_RELEASE}/s6-${S6_VERSION}-linux-amd64-bin.tar.gz -o /tmp/s6-${S6_VERSION}-linux-amd64-bin.tar.gz \
+  && curl -sSf -L https://github.com/just-containers/skaware/releases/download/v${SKAWARE_RELEASE}/execline-${EXECLINE_VERSION}-linux-amd64-bin.tar.gz -o /tmp/execline-${EXECLINE_VERSION}-linux-amd64-bin.tar.gz \
+  && printf "%s  %s\n" "${S6_CHECKSUM}" "s6-${S6_VERSION}-linux-amd64-bin.tar.gz" "${EXECLINE_CHECKSUM}" "execline-${EXECLINE_VERSION}-linux-amd64-bin.tar.gz" > /tmp/SHA256SUM \
+  && ( cd /tmp; sha256sum -c SHA256SUM; ) \
+  && tar -C /usr -zxf /tmp/s6-${S6_VERSION}-linux-amd64-bin.tar.gz \
+  && tar -C /usr -zxf /tmp/execline-${EXECLINE_VERSION}-linux-amd64-bin.tar.gz \
+  && rm -rf /tmp/* \
   ;
 CMD ["/usr/bin/s6-svscan","/etc/s6"]
 
@@ -30,8 +37,8 @@ RUN set -x \
   && rm -f /tmp/* \
   ;
 
-ENV SENSU_VERSION 1.4.2
-ENV SENSU_PKG_VERSION 3
+ENV SENSU_VERSION 1.6.1
+ENV SENSU_PKG_VERSION 1
 ENV UCHIWA_VERSION 1.3.1
 ENV UCHIWA_PKG_VERSION 1
 
@@ -118,4 +125,4 @@ COPY config.json.tmpl /etc/sensu/config.json.tmpl
 COPY uchiwa.json.tmpl /etc/uchiwa/uchiwa.json.tmpl
 COPY conf.d/ /etc/sensu/conf.d/
 
-ENV BUILD_VERSION 1.4.2-3
+ENV BUILD_VERSION 1.6.1-1
