@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "load": {
+      "command": "check-load.rb",
+      "subscribers": [
+        "node"
+      ],
+      "interval": 30
+    },
+    "load_metrics": {
+      "type": "metric",
+      "command": "metrics-load.rb",
+      "subscribers": [
+        "node-metrics"
+      ],
+      "interval": 30
+    }
+  }
+}

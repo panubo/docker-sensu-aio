@@ -1,0 +1,26 @@
+{
+  "checks": {
+    "mem": {
+      "command": "check-memory-percent.rb -w 80 -c 90 -p",
+      "subscribers": [
+        "node"
+      ],
+      "interval": 30
+    },
+    "swap": {
+      "command": "check-swap-percent.rb -w 80 -c 90 -r",
+      "subscribers": [
+        "node"
+      ],
+      "interval": 30
+    },
+    "mem_metrics": {
+      "type": "metric",
+      "command": "metrics-memory.rb",
+      "subscribers": [
+        "node-metrics"
+      ],
+      "interval": 30
+    }
+  }
+}

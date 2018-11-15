@@ -1,0 +1,11 @@
+{
+  "checks": {
+    "disks": {
+      "command": "sudo check-disk-usage.rb -x proc,cgroup,iso9660,nfs4 -p /host/run/user -p /host/proc/sys/fs/binfmt_misc -i /host/boot",
+      "subscribers": [
+        "node"
+      ],
+      "interval": 30
+    }
+  }
+}
