@@ -16,7 +16,7 @@
 # - OK otherwise
 #
 
-# From: https://github.com/macropin/sensu-plugins/blob/master/burrow/check-kafka-consumers.rb
+# From: https://github.com/Jana-Mobile/sensu-plugins/blob/master/burrow/check-kafka-consumers.rb
 # LICENSE MIT
 
 require 'sensu-plugin/check/cli'
