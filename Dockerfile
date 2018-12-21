@@ -95,9 +95,6 @@ RUN set -x \
   && rm -rf /var/lib/apt/lists/* \
   ;
 
-# Install a custom plugins
-ADD plugins /usr/local/bin/
-
 ENV PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TMPDIR=/var/tmp
 ENV LOGLEVEL=warn
 ENV SENSU_CACERT=/etc/sensu/ssl/root_ca.pem SENSU_SERVER_CERT=/etc/sensu/ssl/server.pem SENSU_SERVER_KEY=/etc/sensu/ssl/server-key.pem SENSU_CLIENT_CERT=/etc/sensu/ssl/sensu.pem SENSU_CLIENT_KEY=/etc/sensu/ssl/sensu-key.pem
