@@ -37,9 +37,9 @@ RUN set -x \
   && rm -f /tmp/* \
   ;
 
-ENV SENSU_VERSION 1.6.1
-ENV SENSU_PKG_VERSION 1
-ENV UCHIWA_VERSION 1.3.1
+ENV SENSU_VERSION 1.6.2
+ENV SENSU_PKG_VERSION 2
+ENV UCHIWA_VERSION 1.5.0
 ENV UCHIWA_PKG_VERSION 1
 
 # Setup sensu package repo & Install Sensu, uid:gid sensu 999:999 uchiwa 998:998
@@ -125,4 +125,4 @@ COPY config.json.tmpl /etc/sensu/config.json.tmpl
 COPY uchiwa.json.tmpl /etc/uchiwa/uchiwa.json.tmpl
 COPY conf.d/ /etc/sensu/conf.d/
 
-ENV BUILD_VERSION 1.6.1-1
+ENV BUILD_VERSION 1.6.2-1
