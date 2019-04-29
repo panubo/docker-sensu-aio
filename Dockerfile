@@ -59,9 +59,13 @@ RUN set -x \
   && apt-get install -y apt-transport-https \
   && groupadd -g 110 rabbitmq \
   && useradd -u 106 -g rabbitmq -c "RabbitMQ messaging server,,," -M -d "/var/lib/rabbitmq" -s /bin/false rabbitmq \
-  && curl -L https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | apt-key add - \
-  && echo "deb https://dl.bintray.com/rabbitmq/debian stretch main" | tee /etc/apt/sources.list.d/rabbitmq.list \
-  && echo "deb http://dl.bintray.com/rabbitmq-erlang/debian stretch erlang-20.x" | tee /etc/apt/sources.list.d/rabbitmq.list \
+  && GPG_KEYS="0A9AF2115F4687BD29803A206B73A36E6026DFCA" \
+  && ( gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$GPG_KEYS" \
+      || gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$GPG_KEYS" \
+      || gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$GPG_KEYS" ) \
+  && gpg --armor --export "${GPG_KEYS}" | apt-key add - \
+  && echo "deb https://dl.bintray.com/rabbitmq/debian stretch rabbitmq-server-v3.6.x" | tee /etc/apt/sources.list.d/rabbitmq.list \
+  && echo "deb http://dl.bintray.com/rabbitmq-erlang/debian stretch erlang-20.x" | tee -a /etc/apt/sources.list.d/rabbitmq.list \
   && apt-get update \
   && apt-get install -y rabbitmq-server \
   && apt-get clean \
