@@ -37,7 +37,7 @@ RUN set -x \
   && rm -f /tmp/* \
   ;
 
-ENV SENSU_VERSION 1.6.2
+ENV SENSU_VERSION 1.7.0
 ENV SENSU_PKG_VERSION 2
 ENV UCHIWA_VERSION 1.5.0
 ENV UCHIWA_PKG_VERSION 1
@@ -55,10 +55,17 @@ RUN set -x \
 
 # Install RabbitMQ, uid:gid 106:110
 RUN set -x \
+  && apt-get update \
+  && apt-get install -y apt-transport-https \
   && groupadd -g 110 rabbitmq \
   && useradd -u 106 -g rabbitmq -c "RabbitMQ messaging server,,," -M -d "/var/lib/rabbitmq" -s /bin/false rabbitmq \
-  && curl https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add - \
-  && echo "deb     http://www.rabbitmq.com/debian/ testing main" | tee /etc/apt/sources.list.d/rabbitmq.list \
+  && GPG_KEYS="0A9AF2115F4687BD29803A206B73A36E6026DFCA" \
+  && ( gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$GPG_KEYS" \
+      || gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$GPG_KEYS" \
+      || gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$GPG_KEYS" ) \
+  && gpg --armor --export "${GPG_KEYS}" | apt-key add - \
+  && echo "deb https://dl.bintray.com/rabbitmq/debian stretch rabbitmq-server-v3.6.x" | tee /etc/apt/sources.list.d/rabbitmq.list \
+  && echo "deb http://dl.bintray.com/rabbitmq-erlang/debian stretch erlang-20.x" | tee -a /etc/apt/sources.list.d/rabbitmq.list \
   && apt-get update \
   && apt-get install -y rabbitmq-server \
   && apt-get clean \
@@ -98,7 +105,7 @@ RUN set -x \
 ENV PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TMPDIR=/var/tmp
 ENV LOGLEVEL=warn
 ENV SENSU_CACERT=/etc/sensu/ssl/root_ca.pem SENSU_SERVER_CERT=/etc/sensu/ssl/server.pem SENSU_SERVER_KEY=/etc/sensu/ssl/server-key.pem SENSU_CLIENT_CERT=/etc/sensu/ssl/sensu.pem SENSU_CLIENT_KEY=/etc/sensu/ssl/sensu-key.pem
-ENV SENSU_RABBITMQ_SERVER_USER=guest SENSU_RABBITMQ_SERVER_PASS=guest SENSU_RABBITMQ_VHOST=/ 
+ENV SENSU_RABBITMQ_SERVER_USER=guest SENSU_RABBITMQ_SERVER_PASS=guest SENSU_RABBITMQ_VHOST=/
 
 # Expose some ports
 # Rabbitmq ssl 5671/tcp non-ssl 5672/tcp
@@ -125,4 +132,4 @@ COPY config.json.tmpl /etc/sensu/config.json.tmpl
 COPY uchiwa.json.tmpl /etc/uchiwa/uchiwa.json.tmpl
 COPY conf.d/ /etc/sensu/conf.d/
 
-ENV BUILD_VERSION 1.6.2-1
+ENV BUILD_VERSION 1.7.0-1
