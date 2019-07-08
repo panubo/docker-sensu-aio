@@ -39,7 +39,7 @@ RUN set -x \
 
 ENV SENSU_VERSION 1.7.0
 ENV SENSU_PKG_VERSION 2
-ENV UCHIWA_VERSION 1.5.0
+ENV UCHIWA_VERSION 1.7.0
 ENV UCHIWA_PKG_VERSION 1
 
 # Setup sensu package repo & Install Sensu, uid:gid sensu 999:999 uchiwa 998:998
@@ -102,6 +102,17 @@ RUN set -x \
   && rm -rf /var/lib/apt/lists/* \
   ;
 
+# Install sensu go pagerduty handler
+RUN set -x \
+  && PAGERDUTY_HANDLER_VERSION=1.1.0 \
+  && PAGERDUTY_HANDLER_CHECKSUM=f2dcafa20098de917d7861d2b92d10dbe53cae79afc58dd88f039cbcee8c23db \
+  && curl -sS -o /tmp/sensu-pagerduty-handler_${PAGERDUTY_HANDLER_VERSION}_linux_amd64.tar.gz -L https://github.com/sensu/sensu-pagerduty-handler/releases/download/${PAGERDUTY_HANDLER_VERSION}/sensu-pagerduty-handler_${PAGERDUTY_HANDLER_VERSION}_linux_amd64.tar.gz \
+  && echo "${PAGERDUTY_HANDLER_CHECKSUM}  sensu-pagerduty-handler_${PAGERDUTY_HANDLER_VERSION}_linux_amd64.tar.gz" > /tmp/SHA256SUM \
+  && ( cd /tmp; sha256sum -c SHA256SUM; ) \
+  && tar -C /opt/sensu/embedded -zxf /tmp/sensu-pagerduty-handler_${PAGERDUTY_HANDLER_VERSION}_linux_amd64.tar.gz bin/sensu-pagerduty-handler \
+  && rm -f /tmp/* \
+  ;
+
 ENV PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TMPDIR=/var/tmp
 ENV LOGLEVEL=warn
 ENV SENSU_CACERT=/etc/sensu/ssl/root_ca.pem SENSU_SERVER_CERT=/etc/sensu/ssl/server.pem SENSU_SERVER_KEY=/etc/sensu/ssl/server-key.pem SENSU_CLIENT_CERT=/etc/sensu/ssl/sensu.pem SENSU_CLIENT_KEY=/etc/sensu/ssl/sensu-key.pem
@@ -132,4 +143,4 @@ COPY config.json.tmpl /etc/sensu/config.json.tmpl
 COPY uchiwa.json.tmpl /etc/uchiwa/uchiwa.json.tmpl
 COPY conf.d/ /etc/sensu/conf.d/
 
-ENV BUILD_VERSION 1.7.0-1
+ENV BUILD_VERSION 1.7.0-2
