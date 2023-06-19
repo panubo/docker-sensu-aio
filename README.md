@@ -1,3 +1,5 @@
+# DEPRECATED - this is an obsolete version of Sensu that should no longer be used
+
 ## Sensu All in One
 
 This image is a quick way to get started with Sensu. It includes the following
